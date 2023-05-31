@@ -1,15 +1,17 @@
-from utils.utils import preproc, vis
-from utils.utils import BaseEngine
+from yolo_trt.yolo_trt import preproc, vis
+from yolo_trt.yolo_trt import BaseEngine
 import numpy as np
 import cv2
 import time
 import os
 import argparse
+# import yolo_trt 
 
 class Predictor(BaseEngine):
     def __init__(self, engine_path):
         super(Predictor, self).__init__(engine_path)
-        self.n_classes = 80  # your model classes
+        self.n_classes = 1  # your model classes
+        self.class_names = ['test'] # your model class names
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -28,8 +30,12 @@ if __name__ == '__main__':
     img_path = args.image
     video = args.video
     if img_path:
-      origin_img = pred.inference(img_path, conf=0.1, end2end=args.end2end)
+      result = pred.inference(img_path, conf=0.1, end2end=args.end2end)
+      print(result)
+      result = pred.inference(img_path, conf=0.1, end2end=args.end2end)
 
-      cv2.imwrite("%s" %args.output , origin_img)
+  
+
+      # cv2.imwrite("%s" %args.output , origin_img)
     if video:
       pred.detect_video(video, conf=0.1, end2end=args.end2end) # set 0 use a webcam

@@ -1,5 +1,7 @@
 **/__pycache__/
-
+*.jpg
 *.trt
-
+**/build/
+**/dist/
 *.onnx 
+**.egg-info/

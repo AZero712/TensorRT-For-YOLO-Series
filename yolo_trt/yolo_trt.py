@@ -19,6 +19,7 @@ class BaseEngine(object):
          'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
          'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
          'hair drier', 'toothbrush' ]
+        
 
         logger = trt.Logger(trt.Logger.WARNING)
         logger.min_severity = trt.Logger.Severity.ERROR
@@ -101,7 +102,7 @@ class BaseEngine(object):
         cap.release()
         cv2.destroyAllWindows()
 
-    def inference(self, img_path, conf=0.5, end2end=False):
+    def inference(self, img_path, conf=0.5, end2end=False, is_return_img=False):
         origin_img = cv2.imread(img_path)
         img, ratio = preproc(origin_img, self.imgsz, self.mean, self.std)
         data = self.infer(img)
@@ -112,6 +113,9 @@ class BaseEngine(object):
         else:
             predictions = np.reshape(data, (1, -1, int(5+self.n_classes)))[0]
             dets = self.postprocess(predictions,ratio)
+
+        if not is_return_img:
+            return dets
 
         if dets is not None:
             final_boxes, final_scores, final_cls_inds = dets[:,
