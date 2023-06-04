@@ -98,7 +98,7 @@ class EngineBuilder:
         :param verbose: If enabled, a higher verbosity level will be set on the TensorRT logger.
         :param workspace: Max memory workspace to allow, in Gb.
         """
-        self.trt_logger = trt.Logger(trt.Logger.INFO)
+        self.trt_logger = trt.Logger(trt.Logger.WARNING)
         if verbose:
             self.trt_logger.min_severity = trt.Logger.Severity.VERBOSE
 
@@ -106,7 +106,7 @@ class EngineBuilder:
 
         self.builder = trt.Builder(self.trt_logger)
         self.config = self.builder.create_builder_config()
-        self.config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, workspace * (2 ** 30))
+        # self.config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, workspace * (2 ** 30))
         # self.config.max_workspace_size = workspace * (2 ** 30)  # Deprecation
 
         self.batch_size = None
@@ -258,7 +258,11 @@ class EngineBuilder:
                                      exact_batches=True))
 
         # with self.builder.build_engine(self.network, self.config) as engine, open(engine_path, "wb") as f:
-        with self.builder.build_serialized_network(self.network, self.config) as engine, open(engine_path, "wb") as f:
+        
+        # with self.builder.build_serialized_network(self.network, self.config) as engine, open(engine_path, "wb") as f:
+        #     print("Serializing engine to file: {:}".format(engine_path))
+        #     f.write(engine)  # .serialize()
+        with self.builder.build_engine(self.network, self.config).serialize() as engine, open(engine_path, "wb") as f:
             print("Serializing engine to file: {:}".format(engine_path))
             f.write(engine)  # .serialize()
 

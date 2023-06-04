@@ -32,10 +32,9 @@ if __name__ == '__main__':
     if img_path:
       result = pred.inference(img_path, conf=0.1, end2end=args.end2end)
       print(result)
-      result = pred.inference(img_path, conf=0.1, end2end=args.end2end)
+      # result = pred.inference(img_path, conf=0.1, end2end=args.end2end)
 
-  
-
-      # cv2.imwrite("%s" %args.output , origin_img)
+      origin_img = pred.inference(img_path, conf=0.1, end2end=args.end2end, is_return_img=True)
+      cv2.imwrite("%s" %args.output , origin_img)
     if video:
       pred.detect_video(video, conf=0.1, end2end=args.end2end) # set 0 use a webcam
