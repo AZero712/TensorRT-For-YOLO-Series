@@ -102,8 +102,8 @@ class BaseEngine(object):
         cap.release()
         cv2.destroyAllWindows()
 
-    def inference(self, img_path, conf=0.5, end2end=False, is_return_img=False):
-        origin_img = cv2.imread(img_path)
+    def inference(self, origin_img, conf=0.5, end2end=False, is_return_img=False):
+        # origin_img = cv2.imread(img_path)
         img, ratio = preproc(origin_img, self.imgsz, self.mean, self.std)
         data = self.infer(img)
         if end2end:

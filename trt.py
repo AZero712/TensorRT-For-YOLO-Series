@@ -30,7 +30,8 @@ if __name__ == '__main__':
     img_path = args.image
     video = args.video
     if img_path:
-      result, origin_img = pred.inference(img_path, conf=0.1, end2end=args.end2end, is_return_img=True)
+      origin_img = cv2.imread(img_path)
+      result, origin_img = pred.inference(origin_img, conf=0.1, end2end=args.end2end, is_return_img=True)
       print(result)
       # result = pred.inference(img_path, conf=0.1, end2end=args.end2end)
       cv2.imwrite("%s" %args.output , origin_img)
