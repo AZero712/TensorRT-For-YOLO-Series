@@ -122,7 +122,7 @@ class BaseEngine(object):
                                                              :4], dets[:, 4], dets[:, 5]
             origin_img = vis(origin_img, final_boxes, final_scores, final_cls_inds,
                              conf=conf, class_names=self.class_names)
-        return origin_img
+        return dets, origin_img
 
     @staticmethod
     def postprocess(predictions, ratio):
