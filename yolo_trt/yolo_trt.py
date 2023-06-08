@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 class BaseEngine(object):
     def __init__(self, engine_path):
+        self.cfx = cuda.Device(0).make_context()
         self.mean = None
         self.std = None
         self.n_classes = 80
@@ -50,9 +51,11 @@ class BaseEngine(object):
         for inp in self.inputs:
             cuda.memcpy_htod_async(inp['device'], inp['host'], self.stream)
         # run inference
+        self.cfx.push()
         self.context.execute_async_v2(
             bindings=self.bindings,
             stream_handle=self.stream.handle)
+        self.cfx.pop()
         # fetch outputs from gpu
         for out in self.outputs:
             cuda.memcpy_dtoh_async(out['host'], out['device'], self.stream)
@@ -103,7 +106,6 @@ class BaseEngine(object):
         cv2.destroyAllWindows()
 
     def inference(self, origin_img, conf=0.5, end2end=False, is_return_img=False):
-        # origin_img = cv2.imread(img_path)
         img, ratio = preproc(origin_img, self.imgsz, self.mean, self.std)
         data = self.infer(img)
         if end2end:
